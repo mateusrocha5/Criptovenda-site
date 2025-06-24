@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixCoinPré-venda</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>PixCoinPré-venda</h1>
+      <nav>
+        <ul>
+          <li><a href="#tokens">Tokens</a></li>
+          <li><a href="#features">Funcionalidades</a></li>
+          <li><a href="#contact">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="intro">
+      <div class="container">
+        <h2>Bem-vindo ao PixCoinPré-venda</h2>
+        <p>Compre e venda tokens com facilidade. Integração com Pix, BNB e USDT.</p>
+        <a href="#tokens" class="btn">Ver Tokens Listados</a>
+      </div>
+    </section>
+
+    <section id="tokens" class="section">
+      <div class="container">
+        <h2>Tokens Disponíveis</h2>
+        <div class="token-list">
+          <div class="token">
+            <h3>Token Exemplo 1</h3>
+            <p>Preço: 0.01 BNB</p>
+            <a href="#" class="btn">Comprar</a>
+          </div>
+          <div class="token">
+            <h3>Token Exemplo 2</h3>
+            <p>Preço: 0.5 USDT</p>
+            <a href="#" class="btn">Comprar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="container">
+        <h2>Funcionalidades</h2>
+        <ul>
+          <li>Conexão com carteiras populares: MetaMask, Trust Wallet.</li>
+          <li>Gráficos dinâmicos de compra e venda.</li>
+          <li>Pagamentos com Pix, BNB, e USDT.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Entre em Contato</h2>
+        <form>
+          <label for="name">Nome:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="message">Mensagem:</label>
+          <textarea id="message" name="message" required></textarea>
+
+          <button type="submit" class="btn">Enviar</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 PixCoinPré-venda. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+</body>   
+</html>                                     /* Estilos gerais */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+header {
+  background: #007BFF;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+header h1 {
+  text-align: center;
+}
+
+header nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+header nav ul li {
+  margin: 0 15px;
+}
+
+header nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.section {
+  padding: 2rem 0;
+}
+
+.section h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.token-list {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.token {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.token h3 {
+  margin-top: 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background: #007BFF;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background: #0056b3;
+}
+
+footer {
+  text-align: center;
+  background: #333;
+  color: #fff;
+  padding: 1rem 0;
+}
