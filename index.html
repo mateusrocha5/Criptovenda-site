@@ -1,138 +1,213 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Criptovenda</title>
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Criptovenda</title>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+<style>
+  /* Reset básico */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: #00ffcc;
+    color: #000;
+    padding: 20px 30px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,255,204,0.4);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  main {
+    flex: 1;
+    max-width: 480px;
+    margin: 30px auto;
+    padding: 0 20px 40px;
+  }
+  section {
+    background: #1f1f1f;
+    border-radius: 10px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  }
+  h2, h3, h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  p {
+    line-height: 1.4;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
+  button {
+    background-color: #00ffcc;
+    border: none;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 14px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+  button:hover {
+    background-color: #00d4aa;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1.8px solid #444;
+    background: #222;
+    color: #eee;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: #00ffcc;
+    background: #1a1a1a;
+  }
+  #walletAddress {
+    margin-top: 12px;
+    font-weight: 600;
+    color: #00ffcc;
+    word-break: break-all;
+  }
+  #adminStatus, #tokenInfo {
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  #adminStatus {
+    color: #7fff7f;
+  }
+  #tokenInfo {
+    color: #00d4aa;
+  }
+  /* Painel admin */
+  #adminPanel {
+    display: none;
+  }
+
+  /* Responsividade */
+  @media (max-width: 520px) {
+    main {
+      margin: 15px;
+      padding-bottom: 30px;
     }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0e0e0e;
-      color: #fff;
-    }
-    header {
-      background: #00ffcc;
-      color: #000;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .container {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    .box {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      background: #00ffcc;
-      color: #000;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    input {
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      width: 100%;
-      border-radius: 5px;
-      border: none;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
-  <header>Criptovenda</header>
+<header>
+  Criptovenda
+</header>
 
-  <div class="container">
-    <div class="box" id="home">
-      <h2>Bem-vindo à Criptovenda</h2>
-      <p>Conecte sua carteira para ver as moedas em pré-venda ou entre como administrador.</p>
-      <button onclick="connectWallet()">🔗 Conectar carteira</button>
-      <p id="walletAddress"></p>
-    </div>
+<main>
 
-    <div class="box">
-      <h3>Login Administrador</h3>
-      <input type="text" id="adminEmail" placeholder="Email do admin">
-      <input type="password" id="adminPassword" placeholder="Senha">
-      <button onclick="adminLogin()">Entrar</button>
-      <p id="adminStatus" style="margin-top: 10px; color: lime;"></p>
-    </div>
+  <section id="home">
+    <h2>Bem-vindo à Criptovenda</h2>
+    <p>Conecte sua carteira para ver as moedas em pré-venda ou entre como administrador.</p>
+    <button onclick="connectWallet()">🔗 Conectar carteira</button>
+    <p id="walletAddress"></p>
+  </section>
 
-    <div class="box" id="adminPanel" style="display:none;">
-      <h3>Painel do Administrador</h3>
-      <p>Escolha a carteira que receberá os pagamentos:</p>
-      <input type="text" id="carteiraDestino" placeholder="Carteira que vai receber os pagamentos">
-      <button onclick="salvarCarteira()">Salvar Carteira</button>
+  <section>
+    <h3>Login Administrador</h3>
+    <input type="text" id="adminEmail" placeholder="Email do admin" autocomplete="username" />
+    <input type="password" id="adminPassword" placeholder="Senha" autocomplete="current-password" />
+    <button onclick="adminLogin()">Entrar</button>
+    <p id="adminStatus"></p>
+  </section>
 
-      <h4 style="margin-top:20px;">Listar novo token</h4>
-      <input type="text" id="tokenContrato" placeholder="Contrato do token (BSC)">
-      <button onclick="listarToken()">Listar Token</button>
-      <p id="tokenInfo" style="margin-top: 10px;"></p>
-    </div>
-  </div>
+  <section id="adminPanel">
+    <h3>Painel do Administrador</h3>
+    <p>Escolha a carteira que receberá os pagamentos:</p>
+    <input type="text" id="carteiraDestino" placeholder="Carteira que vai receber os pagamentos" />
+    <button onclick="salvarCarteira()">Salvar Carteira</button>
 
-  <script>
-    let carteiraConectada = "";
+    <h4 style="margin-top: 30px;">Listar novo token</h4>
+    <input type="text" id="tokenContrato" placeholder="Contrato do token (BSC)" />
+    <button onclick="listarToken()">Listar Token</button>
+    <p id="tokenInfo"></p>
+  </section>
 
-    async function connectWallet() {
-      if (window.ethereum) {
+</main>
+
+<script>
+  let carteiraConectada = "";
+
+  async function connectWallet() {
+    if (window.ethereum) {
+      try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         carteiraConectada = accounts[0];
         document.getElementById('walletAddress').innerText = "Carteira conectada: " + carteiraConectada;
-      } else {
-        alert("Instale o Metamask para continuar.");
+      } catch (error) {
+        alert("A conexão com a carteira foi cancelada.");
       }
+    } else {
+      alert("Instale o Metamask para continuar.");
     }
+  }
 
-    function adminLogin() {
-      const email = document.getElementById('adminEmail').value;
-      const senha = document.getElementById('adminPassword').value;
-      
-      if (email === "mateusrocha5653@gmail.com" && senha === "mateus@0827") {
-        document.getElementById("adminStatus").innerText = "Login realizado com sucesso!";
-        document.getElementById("adminPanel").style.display = "block";
-      } else {
-        document.getElementById("adminStatus").innerText = "Email ou senha incorretos.";
-        document.getElementById("adminPanel").style.display = "none";
-      }
-    }
+  function adminLogin() {
+    const email = document.getElementById('adminEmail').value.trim();
+    const senha = document.getElementById('adminPassword').value;
 
-    function salvarCarteira() {
-      const carteira = document.getElementById("carteiraDestino").value;
-      if (carteira.startsWith("0x") && carteira.length === 42) {
-        alert("Carteira salva com sucesso: " + carteira);
-      } else {
-        alert("Carteira inválida!");
-      }
+    if (email === "mateusrocha5653@gmail.com" && senha === "mateus@0827") {
+      document.getElementById("adminStatus").innerText = "Login realizado com sucesso!";
+      document.getElementById("adminPanel").style.display = "block";
+      // Limpa campos e status do login
+      document.getElementById('adminEmail').value = "";
+      document.getElementById('adminPassword').value = "";
+      document.getElementById("adminStatus").style.color = "#7fff7f";
+    } else {
+      document.getElementById("adminStatus").innerText = "Email ou senha incorretos.";
+      document.getElementById("adminStatus").style.color = "#ff4c4c";
+      document.getElementById("adminPanel").style.display = "none";
     }
+  }
 
-    function listarToken() {
-      const contrato = document.getElementById("tokenContrato").value;
-      if (contrato.startsWith("0x") && contrato.length === 42) {
-        document.getElementById("tokenInfo").innerText = "Token listado com sucesso! Contrato: " + contrato;
-        // aqui no futuro podemos puxar dados do BscScan pela API
-      } else {
-        document.getElementById("tokenInfo").innerText = "Contrato inválido.";
-      }
+  function salvarCarteira() {
+    const carteira = document.getElementById("carteiraDestino").value.trim();
+    if (carteira.startsWith("0x") && carteira.length === 42) {
+      alert("Carteira salva com sucesso: " + carteira);
+    } else {
+      alert("Carteira inválida!");
     }
-  </script>
+  }
+
+  function listarToken() {
+    const contrato = document.getElementById("tokenContrato").value.trim();
+    if (contrato.startsWith("0x") && contrato.length === 42) {
+      document.getElementById("tokenInfo").innerText = "Token listado com sucesso! Contrato: " + contrato;
+    } else {
+      document.getElementById("tokenInfo").innerText = "Contrato inválido.";
+    }
+  }
+</script>
+
 </body>
 </html>
 Update index.html
-
 
