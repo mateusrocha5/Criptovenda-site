@@ -2,282 +2,318 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Criptovenda</title>
+  <title>CriptoVenda - Pré-venda de Moedas</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f0f1c;
-      color: #fff;
-    }
-    header {
-      background: #1f1f3d;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      color: #8c52ff;
-    }
-    .container {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: #eee;
       max-width: 600px;
-      margin: 30px auto;
-      background: #1a1a2e;
-      border-radius: 10px;
+      margin: 20px auto;
       padding: 20px;
-      box-shadow: 0 0 15px #000;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
-    input, select {
+    h2, h3 {
+      color: #61dafb;
+    }
+    input, textarea, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      background: #292942;
-      border: none;
+      margin-bottom: 12px;
       border-radius: 5px;
-      color: #fff;
+      border: none;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      background: #8c52ff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
+      background-color: #61dafb;
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
-      font-weight: bold;
+      border: none;
     }
-    button:hover {
-      background: #a178ff;
+    button.small {
+      width: auto;
+      padding: 6px 12px;
+      margin-right: 10px;
     }
-    #adminPanel, #atendentePanel, #tokenPanel {
-      display: none;
+    ul {
+      padding-left: 20px;
     }
-    .token-box {
-      background: #222;
+    .support-message {
+      background: #2e2e3e;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
+      margin-bottom: 10px;
+      border-radius: 5px;
     }
-    .whatsapp-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #25d366;
-      color: #fff;
-      padding: 15px 20px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 0 10px #000;
+    #logoutBtn {
+      margin-bottom: 20px;
+      background-color: #ff5555;
+      color: white;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Criptovenda</h1>
-    <p>Plataforma de pré-venda com painel de admin e suporte via WhatsApp</p>
-  </header>
-
-  <div class="container" id="loginSection">
-    <h2>Login</h2>
-    <input type="text" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginSenha" placeholder="Senha">
-    <button onclick="fazerLogin()">Entrar</button>
+  <div id="loginSection">
+    <h2>CriptoVenda - Login</h2>
+    <input id="loginEmailPhone" placeholder="Número celular ou email admin" />
+    <input id="loginPassword" type="password" placeholder="Senha" />
+    <button id="loginBtn">Entrar</button>
+    <button id="registerBtn">Cadastrar Usuário</button>
+    <p style="font-size: 14px; color: #999;">
+      * Usuários se cadastram com número de celular <br />
+      * Admin usa e-mail e senha fixos
+    </p>
   </div>
 
-  <!-- Painel do Administrador -->
-  <div class="container" id="adminPanel">
+  <div id="adminPanel" class="hidden">
+    <button id="logoutBtn">Sair</button>
     <h2>Painel do Administrador</h2>
+    <h3>Adicionar novo token</h3>
+    <input id="tokenName" placeholder="Nome do token" />
+    <input id="tokenSymbol" placeholder="Símbolo do token" />
+    <input id="tokenContract" placeholder="Contrato (endereço)" />
+    <button id="addTokenBtn">Adicionar Token</button>
 
-    <h3>📥 Carteira para receber pagamentos:</h3>
-    <input type="text" id="carteiraAdmin" placeholder="Endereço da carteira">
-    <button onclick="alert('Carteira salva com sucesso!')">Salvar Carteira</button>
+    <h3>Tokens listados</h3>
+    <ul id="tokenListAdmin"></ul>
 
-    <hr/>
-    <h3>🪙 Cadastrar Token</h3>
-    <input type="text" id="tokenNome" placeholder="Nome do Token">
-    <input type="text" id="tokenSimbolo" placeholder="Símbolo">
-    <input type="text" id="tokenContrato" placeholder="Contrato">
-    <input type="text" id="tokenLogo" placeholder="Link da Logo">
-    <input type="text" id="tokenRede" placeholder="Rede (ex: BSC)">
-    <button onclick="cadastrarToken()">Listar Token</button>
-
-    <div id="tokenPanel"></div>
-
-    <hr/>
-    <h3>👨‍💼 Cadastrar Atendente</h3>
-    <input type="text" id="atendenteNome" placeholder="Nome do Atendente">
-    <input type="text" id="atendenteEmail" placeholder="Email do Atendente">
-    <input type="password" id="atendenteSenha" placeholder="Senha do Atendente">
-    <button onclick="cadastrarAtendente()">Adicionar Atendente</button>
-
-    <div id="listaAtendentes"></div>
-
-    <button onclick="logout()">Sair</button>
+    <h3>Mensagens do Suporte</h3>
+    <div id="supportMessagesAdmin"></div>
   </div>
 
-  <!-- Painel do Atendente -->
-  <div class="container" id="atendentePanel">
-    <h2>Painel do Atendente</h2>
-    <p>📞 Aqui futuramente aparecerão as mensagens dos usuários.</p>
-    <button onclick="logout()">Sair</button>
+  <div id="userPanel" class="hidden">
+    <button id="logoutBtnUser">Sair</button>
+    <h2>Área do Usuário</h2>
+    <h3>Tokens disponíveis</h3>
+    <ul id="tokenListUser"></ul>
+
+    <h3>Suporte</h3>
+    <textarea id="supportMessageInput" placeholder="Escreva sua mensagem para o suporte"></textarea>
+    <button id="sendSupportMsgBtn">Enviar Mensagem</button>
+
+    <h4>Mensagens enviadas</h4>
+    <div id="userSupportMessages"></div>
   </div>
 
-  <!-- Botão do WhatsApp -->
-  <a href="https://wa.me/5511973829459" class="whatsapp-btn" target="_blank">💬 Suporte</a>
+<script>
+  // Dados simulados (servidor fake)
+  const ADMIN_EMAIL = "mateusrocha5653@gmail.com";
+  const ADMIN_PASSWORD = "mateus@0827";
 
-  <script>
-    const adminEmail = "mateusrocha5653@gmail.com";
-    const adminSenha = "mateus@0827";
-    let atendentes = [];
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let tokens = JSON.parse(localStorage.getItem("tokens")) || [];
+  let supportMessages = JSON.parse(localStorage.getItem("supportMessages")) || [];
 
-    function fazerLogin() {
-      const email = document.getElementById("loginEmail").value;
-      const senha = document.getElementById("loginSenha").value;
+  let currentUser = null;
 
-      if (email === adminEmail && senha === adminSenha) {
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-      } else {
-        const atendente = atendentes.find(a => a.email === email && a.senha === senha);
-        if (atendente) {
-          document.getElementById("loginSection").style.display = "none";
-          document.getElementById("atendentePanel").style.display = "block";
-        } else {
-          alert("Login inválido.");
-        }
-      }
+  // Funções gerais
+  function saveData() {
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("tokens", JSON.stringify(tokens));
+    localStorage.setItem("supportMessages", JSON.stringify(supportMessages));
+  }
+
+  function showLogin() {
+    document.getElementById("loginSection").classList.remove("hidden");
+    document.getElementById("adminPanel").classList.add("hidden");
+    document.getElementById("userPanel").classList.add("hidden");
+  }
+
+  function showAdminPanel() {
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+    document.getElementById("userPanel").classList.add("hidden");
+    renderTokensAdmin();
+    renderSupportMessagesAdmin();
+  }
+
+  function showUserPanel() {
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("adminPanel").classList.add("hidden");
+    document.getElementById("userPanel").classList.remove("hidden");
+    renderTokensUser();
+    renderUserSupportMessages();
+  }
+
+  // Login
+  document.getElementById("loginBtn").onclick = function() {
+    const emailPhone = document.getElementById("loginEmailPhone").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if(emailPhone === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      currentUser = { email: ADMIN_EMAIL, isAdmin: true };
+      showAdminPanel();
+      return;
     }
 
-    function cadastrarAtendente() {
-      const nome = document.getElementById("atendenteNome").value;
-      const email = document.getElementById("atendenteEmail").value;
-      const senha = document.getElementById("atendenteSenha").value;
-      atendentes.push({ nome, email, senha });
-
-      const lista = document.getElementById("listaAtendentes");
-      const item = document.createElement("div");
-      item.innerText = `👤 ${nome} - ${email}`;
-      lista.appendChild(item);
-
-      document.getElementById("atendenteNome").value = "";
-      document.getElementById("atendenteEmail").value = "";
-      document.getElementById("atendenteSenha").value = "";
+    // Login usuário
+    let user = users.find(u => u.phone === emailPhone && u.password === password);
+    if(user) {
+      currentUser = { phone: user.phone, isAdmin: false };
+      showUserPanel();
+    } else {
+      alert("Usuário ou senha incorretos.");
     }
+  };
 
-    function cadastrarToken() {
-      const nome = document.getElementById("tokenNome").value;
-      const simbolo = document.getElementById("tokenSimbolo").value;
-      const contrato = document.getElementById("tokenContrato").value;
-      const logo = document.getElementById("tokenLogo").value;
-      const rede = document.getElementById("tokenRede").value;
-      const link = `https://bscscan.com/token/${contrato}`;
+  // Cadastro usuário
+  document.getElementById("registerBtn").onclick = function() {
+    const emailPhone = document.getElementById("loginEmailPhone").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    if(!emailPhone.match(/^\d{10,15}$/)) {
+      alert("Digite um número de celular válido (somente números).");
+      return;
+    }
+    if(password.length < 6) {
+      alert("Senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+    if(users.some(u => u.phone === emailPhone)) {
+      alert("Número de celular já cadastrado.");
+      return;
+    }
+    users.push({ phone: emailPhone, password });
+    saveData();
+    alert("Usuário cadastrado com sucesso!");
+  };
 
-      const panel = document.getElementById("tokenPanel");
-      const box = document.createElement("div");
-      box.className = "token-box";
-      box.innerHTML = `
-        <img src="${logo}" alt="${nome}" width="50" style="vertical-align:middle;border-radius:50%;margin-right:10px;">
-        <strong>${nome} (${simbolo})</strong><br/>
-        Rede: ${rede}<br/>
-        <a href="${link}" target="_blank">Ver no BscScan</a>
+  // Logout admin
+  document.getElementById("logoutBtn").onclick = function() {
+    currentUser = null;
+    showLogin();
+  };
+  // Logout user
+  document.getElementById("logoutBtnUser").onclick = function() {
+    currentUser = null;
+    showLogin();
+  };
+
+  // Render tokens admin
+  function renderTokensAdmin() {
+    const ul = document.getElementById("tokenListAdmin");
+    ul.innerHTML = "";
+    if(tokens.length === 0) {
+      ul.innerHTML = "<li>Nenhum token listado ainda.</li>";
+      return;
+    }
+    tokens.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = `${t.name} (${t.symbol}) - ${t.contract}`;
+      ul.appendChild(li);
+    });
+  }
+
+  // Render tokens user
+  function renderTokensUser() {
+    const ul = document.getElementById("tokenListUser");
+    ul.innerHTML = "";
+    if(tokens.length === 0) {
+      ul.innerHTML = "<li>Nenhum token disponível no momento.</li>";
+      return;
+    }
+    tokens.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = `${t.name} (${t.symbol}) - ${t.contract}`;
+      ul.appendChild(li);
+    });
+  }
+
+  // Adicionar token (admin)
+  document.getElementById("addTokenBtn").onclick = function() {
+    const name = document.getElementById("tokenName").value.trim();
+    const symbol = document.getElementById("tokenSymbol").value.trim();
+    const contract = document.getElementById("tokenContract").value.trim();
+    if(!name || !symbol || !contract) {
+      alert("Preencha todos os campos do token.");
+      return;
+    }
+    tokens.unshift({ name, symbol, contract });
+    saveData();
+    renderTokensAdmin();
+    document.getElementById("tokenName").value = "";
+    document.getElementById("tokenSymbol").value = "";
+    document.getElementById("tokenContract").value = "";
+    alert("Token adicionado!");
+  };
+
+  // Render mensagens suporte admin
+  function renderSupportMessagesAdmin() {
+    const div = document.getElementById("supportMessagesAdmin");
+    div.innerHTML = "";
+    if(supportMessages.length === 0) {
+      div.innerHTML = "<p>Nenhuma mensagem recebida.</p>";
+      return;
+    }
+    supportMessages.forEach((msg, i) => {
+      const container = document.createElement("div");
+      container.className = "support-message";
+      container.innerHTML = `
+        <p><strong>${msg.user}:</strong> ${msg.message}</p>
+        <p><strong>Resposta:</strong> ${msg.answer || "<em>Sem resposta ainda</em>"}</p>
+        ${!msg.answer ? `<textarea id="answer_${i}" placeholder="Digite a resposta"></textarea>
+        <button onclick="answerSupport(${i})">Responder</button>` : ""}
       `;
-      panel.appendChild(box);
+      div.appendChild(container);
+    });
+  }
 
-      document.getElementById("tokenNome").value = "";
-      document.getElementById("tokenSimbolo").value = "";
-      document.getElementById("tokenContrato").value = "";
-      document.getElementById("tokenLogo").value = "";
-      document.getElementById("tokenRede").value = "";
+  // Responder mensagem suporte admin
+  window.answerSupport = function(index) {
+    const answerText = document.getElementById(`answer_${index}`).value.trim();
+    if(!answerText) {
+      alert("Digite a resposta antes de enviar.");
+      return;
     }
+    supportMessages[index].answer = answerText;
+    saveData();
+    renderSupportMessagesAdmin();
+  };
 
-    function logout() {
-      document.getElementById("loginSection").style.display = "block";
-      document.getElementById("adminPanel").style.display = "none";
-      document.getElementById("atendentePanel").style.display = "none";
+  // Enviar mensagem suporte usuário
+  document.getElementById("sendSupportMsgBtn").onclick = function() {
+    const msg = document.getElementById("supportMessageInput").value.trim();
+    if(!msg) {
+      alert("Digite uma mensagem.");
+      return;
     }
-  </script>
+    supportMessages.unshift({ user: currentUser.phone, message: msg, answer: "" });
+    saveData();
+    document.getElementById("supportMessageInput").value = "";
+    renderUserSupportMessages();
+    alert("Mensagem enviada ao suporte.");
+  };
+
+  // Render mensagens suporte usuário
+  function renderUserSupportMessages() {
+    const div = document.getElementById("userSupportMessages");
+    div.innerHTML = "";
+    const userMsgs = supportMessages.filter(m => m.user === currentUser.phone);
+    if(userMsgs.length === 0) {
+      div.innerHTML = "<p>Você ainda não enviou mensagens.</p>";
+      return;
+    }
+    userMsgs.forEach(msg => {
+      const container = document.createElement("div");
+      container.className = "support-message";
+      container.innerHTML = `
+        <p><strong>Você:</strong> ${msg.message}</p>
+        <p><strong>Resposta do suporte:</strong> ${msg.answer || "<em>Sem resposta ainda</em>"}</p>
+      `;
+      div.appendChild(container);
+    });
+  }
+
+  // Inicializa na tela de login
+  showLogin();
+
+</script>
+
 </body>
 </html>
-// app completo React CriptoVenda - login usuário/admin, painel tokens, suporte, Web3 básico
-
-import React, { useState, useEffect } from "react";
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  serverTimestamp,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "SEU_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_APP_ID",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const ADMIN_EMAIL = "mateusrocha5653@gmail.com";
-
-export default function App() {
-  // Estados gerais
-  const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  // Login e cadastro
-  const [emailOrPhone, setEmailOrPhone] = useState("");
-  const [password, setPassword] = useState("");
-
-  // Tokens
-  const [tokens, setTokens] = useState([]);
-  const [newTokenName, setNewTokenName] = useState("");
-  const [newTokenSymbol, setNewTokenSymbol] = useState("");
-  const [newTokenContract, setNewTokenContract] = useState("");
-
-  // Suporte
-  const [supportMessage, setSupportMessage] = useState("");
-  const [supportMessages, setSupportMessages] = useState([]);
-
-  // Observa estado de autenticação
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsAdmin(currentUser?.email === ADMIN_EMAIL);
-      setLoading(false);
-      if (currentUser?.email === ADMIN_EMAIL) {
-        loadTokens();
-        loadSupportMessages();
-      } else if (currentUser) {
-        loadSupportMessagesForUser(currentUser);
-      }
-    });
-    return unsubscribe;
-  }, []);
-
-  // Carregar tokens (admin)
-  async function loadTokens() {
-    const q = query
-
+Update index.html
