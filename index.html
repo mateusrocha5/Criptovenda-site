@@ -3,359 +3,424 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Criptovenda - Login e Painéis Coloridos</title>
+  <title>Criptovenda - Plataforma Profissional</title>
   <style>
+    /* Reset básico */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-      background: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6fa;
       color: #333;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
     }
-    h1, h2, h3 {
+    header {
       text-align: center;
+      margin-bottom: 30px;
     }
-    label, input, button {
-      display: block;
-      margin: 10px auto;
-      width: 90%;
-      max-width: 400px;
+    h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #007bff;
+    }
+    h2 {
+      margin-bottom: 15px;
+      color: #004085;
+    }
+    .card {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+    }
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      margin: 10px 0 15px 0;
       font-size: 1rem;
-      border-radius: 5px;
-    }
-    input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s ease;
     }
     input:focus {
       border-color: #007bff;
       outline: none;
     }
     button {
-      padding: 12px;
       background-color: #007bff;
       color: white;
       border: none;
+      padding: 14px 0;
+      border-radius: 10px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #0056b3;
     }
-    #painelAdmin, #painelAtendente, #chatUsuario {
-      display: none;
+    .btn-logout {
+      background-color: #dc3545;
       margin-top: 20px;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      background: white;
     }
-    #painelAdmin {
-      border-left: 6px solid #007bff; /* azul */
-    }
-    #painelAtendente {
-      border-left: 6px solid #28a745; /* verde */
-    }
-    #chatUsuario {
-      margin-top: 15px;
+    .btn-logout:hover {
+      background-color: #a71d2a;
     }
     #listaAtendentes {
-      margin-top: 10px;
-      max-height: 150px;
+      list-style: none;
+      max-height: 180px;
       overflow-y: auto;
-      padding-left: 20px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    #listaAtendentes li {
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
       color: #555;
     }
+    #listaAtendentes li {
+      padding: 8px 6px;
+      border-bottom: 1px solid #eee;
+    }
+    #chatArea {
+      display: flex;
+      flex-direction: column;
+    }
+    #conversa {
+      height: 200px;
+      background: #e9ecef;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
     .mensagem {
-      border-radius: 8px;
-      margin: 5px 0;
-      padding: 10px;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 12px;
       max-width: 70%;
       word-wrap: break-word;
     }
     .mensagem.admin {
       background-color: #cce5ff;
       align-self: flex-start;
+      color: #004085;
     }
     .mensagem.atendente {
       background-color: #d4edda;
       align-self: flex-end;
+      color: #155724;
       text-align: right;
     }
-    #conversa {
-      display: flex;
-      flex-direction: column;
-      height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-      background: #fafafa;
-    }
     #msgInput {
-      width: 75%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-right: 5px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
       font-size: 1rem;
-    }
-    #btnEnviarMsg {
-      width: 20%;
-      padding: 10px;
-      background-color: #28a745;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    #btnEnviarMsg:hover {
-      background-color: #1e7e34;
-    }
-    #chatArea {
-      display: flex;
-      margin-top: 10px;
-      align-items: center;
+      margin-bottom: 10px;
+      width: 100%;
     }
     #whatsappFix {
       position: fixed;
-      bottom: 15px;
-      right: 15px;
+      bottom: 20px;
+      right: 20px;
       background: #25d366;
       color: white;
       border-radius: 50%;
       width: 60px;
       height: 60px;
-      text-align: center;
-      line-height: 60px;
       font-size: 30px;
+      line-height: 60px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
       text-decoration: none;
       user-select: none;
+    }
+    .msg-error {
+      color: #dc3545;
+      font-weight: 600;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .msg-info {
+      color: #28a745;
+      font-weight: 600;
+      margin-top: 5px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <h1>Criptovenda</h1>
+  <header>
+    <h1>Criptovenda</h1>
+    <p>Plataforma profissional de pré-venda de tokens</p>
+  </header>
 
-  <div id="loginForm">
-    <h2>Login</h2>
-    <label for="inputEmail">Email:</label>
-    <input type="email" id="inputEmail" required autocomplete="username" />
-    
-    <label for="inputSenha">Senha:</label>
-    <input type="password" id="inputSenha" required autocomplete="current-password" />
-    
-    <button id="botaoLogin">Entrar</button>
-  </div>
+  <main>
 
-  <!-- Painel Admin -->
-  <div id="painelAdmin">
-    <h2>Painel do Administrador</h2>
-    <p>Bem-vindo, administrador!</p>
-    
-    <h3>Cadastrar Atendente</h3>
-    <label for="novoEmail">Email do Atendente:</label>
-    <input type="email" id="novoEmail" />
-    <label for="novaSenha">Senha do Atendente:</label>
-    <input type="password" id="novaSenha" />
-    <button id="btnAddAtendente">Adicionar Atendente</button>
-    
-    <h3>Lista de Atendentes</h3>
-    <ul id="listaAtendentes"></ul>
-    
-    <button id="btnLogoutAdmin">Sair</button>
-  </div>
+    <section id="loginSection" class="card">
+      <h2>Login</h2>
+      <input type="email" id="inputEmail" placeholder="Email" autocomplete="username" />
+      <input type="password" id="inputSenha" placeholder="Senha" autocomplete="current-password" />
+      <button id="btnLogin">Entrar</button>
+      <p id="msgLogin" class="msg-error"></p>
+    </section>
 
-  <!-- Painel Atendente -->
-  <div id="painelAtendente">
-    <h2>Painel do Atendente</h2>
-    <p>Bem-vindo, atendente!</p>
-    
-    <div id="chatUsuario">
-      <h3>Chat com Usuários</h3>
-      <div id="conversa"></div>
+    <!-- Painel Admin -->
+    <section id="painelAdmin" class="card painel" style="display:none;">
+      <h2>Painel do Administrador</h2>
+
+      <div class="form-group">
+        <label for="walletAddress">Carteira que vai receber os pagamentos:</label>
+        <input type="text" id="walletAddress" placeholder="0x..." />
+        <button id="btnSalvarCarteira">Salvar Carteira</button>
+        <p id="msgCarteira" class="msg-info"></p>
+      </div>
+
+      <div class="form-group">
+        <h3>Cadastrar Atendente</h3>
+        <input type="email" id="emailAtendente" placeholder="Email do Atendente" />
+        <input type="password" id="senhaAtendente" placeholder="Senha do Atendente" />
+        <button id="btnAddAtendente">Adicionar Atendente</button>
+        <p id="msgAtendente" class="msg-info"></p>
+      </div>
+
+      <div class="form-group">
+        <h3>Lista de Atendentes</h3>
+        <ul id="listaAtendentes"></ul>
+      </div>
+
+      <button id="btnLogoutAdmin" class="btn-logout">Sair</button>
+    </section>
+
+    <!-- Painel Atendente -->
+    <section id="painelAtendente" class="card painel" style="display:none;">
+      <h2>Painel do Atendente</h2>
       <div id="chatArea">
+        <div id="conversa"></div>
         <input type="text" id="msgInput" placeholder="Digite sua mensagem..." />
         <button id="btnEnviarMsg">Enviar</button>
       </div>
-    </div>
-    
-    <button id="btnLogoutAtendente">Sair</button>
-  </div>
+      <button id="btnLogoutAtendente" class="btn-logout">Sair</button>
+    </section>
 
-  <!-- Botão WhatsApp -->
+  </main>
+
+  <!-- WhatsApp Suporte -->
   <a id="whatsappFix" href="https://wa.me/5511973829459" target="_blank" title="Suporte WhatsApp">📱</a>
 
   <script>
-    // Dados fixos do admin
-    const admins = [
-      { email: "mateusrocha5653@gmail.com", senha: "mateus@0827" }
-    ];
+    // Admin fixo
+    const admin = { email: "mateusrocha5653@gmail.com", senha: "mateus@0827" };
 
-    // Função para obter atendentes do localStorage
-    function carregarAtendentes() {
-      const atendentes = localStorage.getItem("atendentes");
-      return atendentes ? JSON.parse(atendentes) : [];
+    // Funções para armazenar dados no localStorage
+    function getAtendentes() {
+      return JSON.parse(localStorage.getItem("atendentes") || "[]");
     }
 
-    // Salvar atendentes no localStorage
-    function salvarAtendentes(lista) {
-      localStorage.setItem("atendentes", JSON.stringify(lista));
+    function setAtendentes(atendentes) {
+      localStorage.setItem("atendentes", JSON.stringify(atendentes));
     }
 
-    // Atualizar lista na tela
+    function getWallet() {
+      return localStorage.getItem("walletRecebimento") || "";
+    }
+
+    function setWallet(wallet) {
+      localStorage.setItem("walletRecebimento", wallet);
+    }
+
+    function getChatMessages() {
+      return JSON.parse(localStorage.getItem("chatMensagens") || "[]");
+    }
+
+    function setChatMessages(msgs) {
+      localStorage.setItem("chatMensagens", JSON.stringify(msgs));
+    }
+
+    // Elementos DOM
+    const loginSection = document.getElementById("loginSection");
+    const painelAdmin = document.getElementById("painelAdmin");
+    const painelAtendente = document.getElementById("painelAtendente");
+    const msgLogin = document.getElementById("msgLogin");
+    const inputEmail = document.getElementById("inputEmail");
+    const inputSenha = document.getElementById("inputSenha");
+    const btnLogin = document.getElementById("btnLogin");
+    const walletAddressInput = document.getElementById("walletAddress");
+    const btnSalvarCarteira = document.getElementById("btnSalvarCarteira");
+    const msgCarteira = document.getElementById("msgCarteira");
+    const emailAtendenteInput = document.getElementById("emailAtendente");
+    const senhaAtendenteInput = document.getElementById("senhaAtendente");
+    const btnAddAtendente = document.getElementById("btnAddAtendente");
+    const msgAtendente = document.getElementById("msgAtendente");
+    const listaAtendentes = document.getElementById("listaAtendentes");
+    const btnLogoutAdmin = document.getElementById("btnLogoutAdmin");
+    const btnLogoutAtendente = document.getElementById("btnLogoutAtendente");
+    const conversaDiv = document.getElementById("conversa");
+    const msgInput = document.getElementById("msgInput");
+    const btnEnviarMsg = document.getElementById("btnEnviarMsg");
+
+    // Variável para guardar usuário logado e tipo
+    let usuarioLogado = null;
+    let tipoUsuario = null;
+
+    // Função para atualizar a lista de atendentes no admin
     function atualizarListaAtendentes() {
-      const lista = carregarAtendentes();
-      const ul = document.getElementById("listaAtendentes");
-      ul.innerHTML = "";
-      if(lista.length === 0) {
-        ul.innerHTML = "<li>Nenhum atendente cadastrado</li>";
+      const atendentes = getAtendentes();
+      listaAtendentes.innerHTML = "";
+      if (atendentes.length === 0) {
+        listaAtendentes.innerHTML = "<li>Nenhum atendente cadastrado</li>";
         return;
       }
-      lista.forEach((at) => {
+      atendentes.forEach((a) => {
         const li = document.createElement("li");
-        li.textContent = at.email;
-        ul.appendChild(li);
+        li.textContent = a.email;
+        listaAtendentes.appendChild(li);
       });
     }
 
-    // Função de login
-    function login(email, senha) {
-      const admin = admins.find(a => a.email === email && a.senha === senha);
-      if (admin) return "admin";
-
-      const atendentes = carregarAtendentes();
-      const atendente = atendentes.find(a => a.email === email && a.senha === senha);
-      if (atendente) return "atendente";
-
-      return null;
-    }
-
-    // Mostrar/ocultar áreas
+    // Função para mostrar login
     function mostrarLogin() {
-      document.getElementById("loginForm").style.display = "block";
-      document.getElementById("painelAdmin").style.display = "none";
-      document.getElementById("painelAtendente").style.display = "none";
+      loginSection.style.display = "block";
+      painelAdmin.style.display = "none";
+      painelAtendente.style.display = "none";
+      msgLogin.textContent = "";
+      inputEmail.value = "";
+      inputSenha.value = "";
     }
 
+    // Mostrar painel admin
     function mostrarPainelAdmin() {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("painelAdmin").style.display = "block";
-      document.getElementById("painelAtendente").style.display = "none";
+      loginSection.style.display = "none";
+      painelAdmin.style.display = "block";
+      painelAtendente.style.display = "none";
+
+      walletAddressInput.value = getWallet();
+      msgCarteira.textContent = "";
       atualizarListaAtendentes();
     }
 
+    // Mostrar painel atendente
     function mostrarPainelAtendente() {
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("painelAdmin").style.display = "none";
-      document.getElementById("painelAtendente").style.display = "block";
+      loginSection.style.display = "none";
+      painelAdmin.style.display = "none";
+      painelAtendente.style.display = "block";
+
       carregarChat();
+      msgInput.value = "";
     }
 
-    // Evento login
-    document.getElementById("botaoLogin").addEventListener("click", () => {
-      const email = document.getElementById("inputEmail").value.trim();
-      const senha = document.getElementById("inputSenha").value.trim();
+    // Validação login
+    btnLogin.addEventListener("click", () => {
+      const email = inputEmail.value.trim();
+      const senha = inputSenha.value.trim();
 
-      const tipo = login(email, senha);
-      if(tipo === "admin") {
+      if (email === admin.email && senha === admin.senha) {
+        usuarioLogado = email;
+        tipoUsuario = "admin";
         mostrarPainelAdmin();
-        alert("Login de administrador realizado com sucesso!");
-      } else if(tipo === "atendente") {
-        mostrarPainelAtendente();
-        alert("Login de atendente realizado com sucesso!");
-      } else {
-        alert("Email ou senha incorretos.");
+        return;
       }
+
+      const atendentes = getAtendentes();
+      const atendente = atendentes.find(a => a.email === email && a.senha === senha);
+      if (atendente) {
+        usuarioLogado = email;
+        tipoUsuario = "atendente";
+        mostrarPainelAtendente();
+        return;
+      }
+
+      msgLogin.textContent = "Email ou senha incorretos.";
+    });
+
+    // Salvar carteira admin
+    btnSalvarCarteira.addEventListener("click", () => {
+      const carteira = walletAddressInput.value.trim();
+      if (!carteira) {
+        msgCarteira.textContent = "Informe a carteira de recebimento.";
+        return;
+      }
+      setWallet(carteira);
+      msgCarteira.textContent = "Carteira salva com sucesso!";
     });
 
     // Adicionar atendente
-    document.getElementById("btnAddAtendente").addEventListener("click", () => {
-      const email = document.getElementById("novoEmail").value.trim();
-      const senha = document.getElementById("novaSenha").value.trim();
+    btnAddAtendente.addEventListener("click", () => {
+      const email = emailAtendenteInput.value.trim();
+      const senha = senhaAtendenteInput.value.trim();
 
-      if(!email || !senha) {
-        alert("Preencha email e senha do atendente.");
+      if (!email || !senha) {
+        msgAtendente.textContent = "Preencha email e senha do atendente.";
         return;
       }
 
-      const lista = carregarAtendentes();
-      if(lista.find(a => a.email === email)) {
-        alert("Atendente já cadastrado.");
+      let atendentes = getAtendentes();
+      if (atendentes.find(a => a.email === email)) {
+        msgAtendente.textContent = "Atendente já cadastrado.";
         return;
       }
 
-      lista.push({email, senha});
-      salvarAtendentes(lista);
+      atendentes.push({ email, senha });
+      setAtendentes(atendentes);
       atualizarListaAtendentes();
 
-      document.getElementById("novoEmail").value = "";
-      document.getElementById("novaSenha").value = "";
-
-      alert("Atendente adicionado com sucesso!");
+      emailAtendenteInput.value = "";
+      senhaAtendenteInput.value = "";
+      msgAtendente.textContent = "Atendente adicionado com sucesso!";
     });
 
-    // Logout Admin
-    document.getElementById("btnLogoutAdmin").addEventListener("click", () => {
+    // Logout admin
+    btnLogoutAdmin.addEventListener("click", () => {
+      usuarioLogado = null;
+      tipoUsuario = null;
       mostrarLogin();
-      alert("Logout realizado.");
     });
 
-    // Logout Atendente
-    document.getElementById("btnLogoutAtendente").addEventListener("click", () => {
+    // Logout atendente
+    btnLogoutAtendente.addEventListener("click", () => {
+      usuarioLogado = null;
+      tipoUsuario = null;
       mostrarLogin();
-      alert("Logout realizado.");
     });
 
-    // Chat simples Atendente <-> Usuário (simulado)
-    // Mensagens ficam salvas no localStorage para persistir na sessão.
-
+    // Função para carregar chat no painel do atendente
     function carregarChat() {
-      const conversaDiv = document.getElementById("conversa");
       conversaDiv.innerHTML = "";
-      const mensagens = JSON.parse(localStorage.getItem("chatMensagens") || "[]");
+      const mensagens = getChatMessages();
       mensagens.forEach(m => {
         const div = document.createElement("div");
-        div.classList.add("mensagem");
-        div.classList.add(m.de);
         div.textContent = m.texto;
+        div.classList.add("mensagem");
+        div.classList.add(m.de === "admin" ? "admin" : "atendente");
         conversaDiv.appendChild(div);
       });
       conversaDiv.scrollTop = conversaDiv.scrollHeight;
     }
 
-    document.getElementById("btnEnviarMsg").addEventListener("click", () => {
-      const input = document.getElementById("msgInput");
-      const texto = input.value.trim();
-      if(!texto) return alert("Digite uma mensagem.");
+    // Enviar mensagem no chat (atendente)
+    btnEnviarMsg.addEventListener("click", () => {
+      const texto = msgInput.value.trim();
+      if (!texto) return;
 
-      let mensagens = JSON.parse(localStorage.getItem("chatMensagens") || "[]");
-      mensagens.push({de: "atendente", texto});
-      localStorage.setItem("chatMensagens", JSON.stringify(mensagens));
-
-      input.value = "";
+      let mensagens = getChatMessages();
+      mensagens.push({ de: "atendente", texto });
+      setChatMessages(mensagens);
+      msgInput.value = "";
       carregarChat();
     });
 
-    // Inicializa página mostrando o login
+    // Ao abrir mostra login
     mostrarLogin();
-
   </script>
-
 </body>
 </html>
 Update index.html
