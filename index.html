@@ -2,50 +2,137 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Criptovenda</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
-      padding: 0;
-      background: #111;
-      color: #fff;
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background-color: #0e0e0e;
+      color: #fff;
+    }
+    header {
+      background: #00ffcc;
+      color: #000;
+      padding: 20px;
       text-align: center;
+      font-size: 24px;
+      font-weight: bold;
     }
-    h1 {
-      font-size: 3rem;
-      color: #00ffcc;
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
+    .box {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
     button {
-      margin-top: 20px;
       padding: 10px 20px;
       background: #00ffcc;
       color: #000;
       border: none;
-      font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
-      border-radius: 8px;
+      font-weight: bold;
     }
-    button:hover {
-      background: #00ddb3;
+    input {
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <h1>Criptovenda</h1>
-  <p>Bem-vindo à plataforma de pré-venda de tokens mais segura e fácil de usar. Conecte sua carteira e comece agora!</p>
-  <button>Conectar carteira</button>
+
+  <header>Criptovenda</header>
+
+  <div class="container">
+    <div class="box" id="home">
+      <h2>Bem-vindo à Criptovenda</h2>
+      <p>Conecte sua carteira para ver as moedas em pré-venda ou entre como administrador.</p>
+      <button onclick="connectWallet()">🔗 Conectar carteira</button>
+      <p id="walletAddress"></p>
+    </div>
+
+    <div class="box">
+      <h3>Login Administrador</h3>
+      <input type="text" id="adminEmail" placeholder="Email do admin">
+      <input type="password" id="adminPassword" placeholder="Senha">
+      <button onclick="adminLogin()">Entrar</button>
+      <p id="adminStatus" style="margin-top: 10px; color: lime;"></p>
+    </div>
+
+    <div class="box" id="adminPanel" style="display:none;">
+      <h3>Painel do Administrador</h3>
+      <p>Escolha a carteira que receberá os pagamentos:</p>
+      <input type="text" id="carteiraDestino" placeholder="Carteira que vai receber os pagamentos">
+      <button onclick="salvarCarteira()">Salvar Carteira</button>
+
+      <h4 style="margin-top:20px;">Listar novo token</h4>
+      <input type="text" id="tokenContrato" placeholder="Contrato do token (BSC)">
+      <button onclick="listarToken()">Listar Token</button>
+      <p id="tokenInfo" style="margin-top: 10px;"></p>
+    </div>
+  </div>
+
+  <script>
+    let carteiraConectada = "";
+
+    async function connectWallet() {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        carteiraConectada = accounts[0];
+        document.getElementById('walletAddress').innerText = "Carteira conectada: " + carteiraConectada;
+      } else {
+        alert("Instale o Metamask para continuar.");
+      }
+    }
+
+    function adminLogin() {
+      const email = document.getElementById('adminEmail').value;
+      const senha = document.getElementById('adminPassword').value;
+      
+      if (email === "mateusrocha5653@gmail.com" && senha === "mateus@0827") {
+        document.getElementById("adminStatus").innerText = "Login realizado com sucesso!";
+        document.getElementById("adminPanel").style.display = "block";
+      } else {
+        document.getElementById("adminStatus").innerText = "Email ou senha incorretos.";
+        document.getElementById("adminPanel").style.display = "none";
+      }
+    }
+
+    function salvarCarteira() {
+      const carteira = document.getElementById("carteiraDestino").value;
+      if (carteira.startsWith("0x") && carteira.length === 42) {
+        alert("Carteira salva com sucesso: " + carteira);
+      } else {
+        alert("Carteira inválida!");
+      }
+    }
+
+    function listarToken() {
+      const contrato = document.getElementById("tokenContrato").value;
+      if (contrato.startsWith("0x") && contrato.length === 42) {
+        document.getElementById("tokenInfo").innerText = "Token listado com sucesso! Contrato: " + contrato;
+        // aqui no futuro podemos puxar dados do BscScan pela API
+      } else {
+        document.getElementById("tokenInfo").innerText = "Contrato inválido.";
+      }
+    }
+  </script>
 </body>
 </html>
-Atualiza index.html com layout bonito
+
+
 
