@@ -1,377 +1,225 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Criptovenda - Suporte e Administração</title>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
-<style>
-  /* Reset e base */
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212; color: #eee; min-height: 100vh;
-    display: flex; flex-direction: column;
-  }
-  header {
-    background: #00ffcc; color: #000; padding: 20px 30px;
-    font-size: 28px; font-weight: 700; text-align: center;
-    box-shadow: 0 2px 8px rgba(0,255,204,0.4);
-    position: sticky; top: 0; z-index: 1000;
-  }
-  main {
-    flex: 1; max-width: 480px; margin: 30px auto; padding: 0 20px 40px;
-  }
-  section {
-    background: #1f1f1f; border-radius: 10px;
-    padding: 25px 30px; margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-  }
-  h2, h3, h4 {
-    margin-top: 0; margin-bottom: 15px; font-weight: 600;
-  }
-  p {
-    line-height: 1.4; margin-bottom: 20px; font-size: 1rem;
-  }
-  button {
-    background-color: #00ffcc; border: none; color: #000;
-    font-weight: 700; font-size: 1.1rem; padding: 14px 22px;
-    border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease;
-    width: 100%; margin-top: 10px;
-  }
-  button:hover {
-    background-color: #00d4aa;
-  }
-  input[type="text"], input[type="password"] {
-    width: 100%; padding: 12px 15px; font-size: 1rem;
-    border-radius: 8px; border: 1.8px solid #444; background: #222;
-    color: #eee; margin-bottom: 15px; transition: border-color 0.3s ease;
-  }
-  input[type="text"]:focus, input[type="password"]:focus {
-    outline: none; border-color: #00ffcc; background: #1a1a1a;
-  }
-  #walletAddress {
-    margin-top: 12px; font-weight: 600; color: #00ffcc; word-break: break-all;
-  }
-  #adminStatus, #tokenInfo, #loginStatus, #chatStatus {
-    margin-top: 12px; font-weight: 600;
-  }
-  #adminStatus {
-    color: #7fff7f;
-  }
-  #tokenInfo {
-    color: #00d4aa;
-  }
-  #loginStatus {
-    color: #7fff7f;
-  }
-  #chatStatus {
-    color: #00ffcc;
-  }
-  #adminPanel, #attendantPanel, #chatBox, #userChatBox {
-    display: none;
-  }
-  #userChatBox, #chatBox {
-    height: 250px; overflow-y: auto;
-    background: #222; padding: 15px; border-radius: 8px;
-    margin-bottom: 15px; font-size: 0.9rem;
-  }
-  .message {
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    border-radius: 15px;
-    max-width: 75%;
-    clear: both;
-  }
-  .userMsg {
-    background: #00ffcc;
-    color: #000;
-    float: right;
-  }
-  .attendantMsg {
-    background: #444;
-    color: #eee;
-    float: left;
-  }
-  /* WhatsApp fixo no canto inferior direito */
-  #whatsappButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #25D366;
-    color: white;
-    border-radius: 50%;
-    width: 60px; height: 60px;
-    font-size: 28px;
-    text-align: center;
-    line-height: 60px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    transition: background-color 0.3s ease;
-    z-index: 10000;
-  }
-  #whatsappButton:hover {
-    background-color: #128c44;
-  }
-  /* Responsividade */
-  @media (max-width: 520px) {
-    main {
-      margin: 15px; padding-bottom: 30px;
-    }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Criptovenda - Login e Painéis</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    label, input, button { display: block; margin: 10px 0; width: 100%; max-width: 400px; }
+    #painelAdmin, #painelAtendente, #chatUsuario { display: none; margin-top: 20px; }
+    #listaAtendentes { margin-top: 10px; }
+    .mensagem { border: 1px solid #ccc; padding: 8px; margin: 5px 0; border-radius: 4px; }
+    .mensagem.admin { background: #def; }
+    .mensagem.atendente { background: #fde; }
+    #whatsappFix { position: fixed; bottom: 15px; right: 15px; background: #25d366; color: white; border-radius: 50%; width: 60px; height: 60px; text-align: center; line-height: 60px; font-size: 30px; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+  </style>
 </head>
 <body>
 
-<header>Criptovenda</header>
+<h1>Criptovenda</h1>
 
-<main>
+<div id="loginForm">
+  <h2>Login</h2>
+  <label for="inputEmail">Email:</label>
+  <input type="email" id="inputEmail" required />
+  
+  <label for="inputSenha">Senha:</label>
+  <input type="password" id="inputSenha" required />
+  
+  <button id="botaoLogin">Entrar</button>
+</div>
 
-  <!-- Login usuário (conectar carteira) -->
-  <section id="home">
-    <h2>Bem-vindo à Criptovenda</h2>
-    <p>Conecte sua carteira para pré-venda ou envie mensagem ao suporte.</p>
-    <button onclick="connectWallet()">🔗 Conectar carteira</button>
-    <p id="walletAddress"></p>
+<!-- Painel Admin -->
+<div id="painelAdmin">
+  <h2>Painel do Administrador</h2>
+  <p>Bem-vindo, administrador!</p>
+  
+  <h3>Cadastrar Atendente</h3>
+  <label for="novoEmail">Email do Atendente:</label>
+  <input type="email" id="novoEmail" />
+  <label for="novaSenha">Senha do Atendente:</label>
+  <input type="password" id="novaSenha" />
+  <button id="btnAddAtendente">Adicionar Atendente</button>
+  
+  <h3>Lista de Atendentes</h3>
+  <ul id="listaAtendentes"></ul>
+  
+  <button id="btnLogoutAdmin">Sair</button>
+</div>
 
-    <div id="userChatSection" style="display:none;">
-      <h3>Chat com Suporte</h3>
-      <div id="userChatBox"></div>
-      <input type="text" id="userMessageInput" placeholder="Digite sua mensagem..." />
-      <button onclick="sendUserMessage()">Enviar Mensagem</button>
-      <p id="chatStatus"></p>
-    </div>
-  </section>
+<!-- Painel Atendente -->
+<div id="painelAtendente">
+  <h2>Painel do Atendente</h2>
+  <p>Bem-vindo, atendente!</p>
+  
+  <div id="chatUsuario">
+    <h3>Chat com Usuários</h3>
+    <div id="conversa" style="height:200px; overflow-y:scroll; border:1px solid #ccc; padding: 5px;"></div>
+    <input type="text" id="msgInput" placeholder="Digite sua mensagem..." />
+    <button id="btnEnviarMsg">Enviar</button>
+  </div>
+  
+  <button id="btnLogoutAtendente">Sair</button>
+</div>
 
-  <!-- Login administrador -->
-  <section>
-    <h3>Login Administrador</h3>
-    <input type="text" id="adminEmail" placeholder="Email do admin" autocomplete="username" />
-    <input type="password" id="adminPassword" placeholder="Senha" autocomplete="current-password" />
-    <button onclick="adminLogin()">Entrar</button>
-    <p id="adminStatus"></p>
-  </section>
-
-  <!-- Painel administrador -->
-  <section id="adminPanel">
-    <h3>Painel do Administrador</h3>
-
-    <p><strong>Gerenciar Carteira para Receber Pagamentos</strong></p>
-    <input type="text" id="carteiraDestino" placeholder="Carteira que vai receber os pagamentos" />
-    <button onclick="salvarCarteira()">Salvar Carteira</button>
-
-    <h4 style="margin-top: 30px;">Listar novo token</h4>
-    <input type="text" id="tokenContrato" placeholder="Contrato do token (BSC)" />
-    <button onclick="listarToken()">Listar Token</button>
-    <p id="tokenInfo"></p>
-
-    <hr style="margin:30px 0;" />
-
-    <h4>Gerenciar Atendentes</h4>
-    <input type="text" id="attendantName" placeholder="Nome do atendente" />
-    <input type="text" id="attendantEmail" placeholder="Email do atendente" />
-    <input type="password" id="attendantPassword" placeholder="Senha do atendente" />
-    <button onclick="addAttendant()">Adicionar Atendente</button>
-    <p id="attendantStatus"></p>
-
-    <h4 style="margin-top: 30px;">Atendentes cadastrados</h4>
-    <ul id="attendantsList" style="list-style:none; padding-left:0;"></ul>
-
-  </section>
-
-  <!-- Login Atendente -->
-  <section id="attendantLoginSection">
-    <h3>Login Atendente</h3>
-    <input type="text" id="attendantLoginEmail" placeholder="Email do atendente" autocomplete="username" />
-    <input type="password" id="attendantLoginPassword" placeholder="Senha" autocomplete="current-password" />
-    <button onclick="attendantLogin()">Entrar</button>
-    <p id="loginStatus"></p>
-  </section>
-
-  <!-- Painel Atendente -->
-  <section id="attendantPanel">
-    <h3>Painel do Atendente</h3>
-    <div id="chatBox"></div>
-    <input type="text" id="attendantMessageInput" placeholder="Digite sua resposta..." />
-    <button onclick="sendAttendantMessage()">Enviar Resposta</button>
-  </section>
-
-</main>
-
-<!-- Botão WhatsApp fixo -->
-<a href="https://wa.me/5511973829459" target="_blank" id="whatsappButton" title="Suporte WhatsApp">📱</a>
+<!-- Botão WhatsApp -->
+<a id="whatsappFix" href="https://wa.me/5511973829459" target="_blank" title="Suporte WhatsApp">📱</a>
 
 <script>
-  // Simples armazenamento local (para protótipo)
-  let attendants = [];
-  let messages = []; // { from: 'user'|'attendant', text: '', time: Date }
+  // Dados fixos do admin
+  const admins = [
+    { email: "mateusrocha5653@gmail.com", senha: "mateus@0827" }
+  ];
 
-  // Carteira conectada do usuário
-  let carteiraConectada = "";
-
-  // Conectar carteira metamask
-  async function connectWallet() {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        carteiraConectada = accounts[0];
-        document.getElementById('walletAddress').innerText = "Carteira conectada: " + carteiraConectada;
-        document.getElementById('userChatSection').style.display = 'block';
-      } catch (err) {
-        alert("Conexão cancelada.");
-      }
-    } else {
-      alert("Instale o Metamask para continuar.");
-    }
+  // Função para obter atendentes do localStorage
+  function carregarAtendentes() {
+    const atendentes = localStorage.getItem("atendentes");
+    return atendentes ? JSON.parse(atendentes) : [];
   }
 
-  // Login Admin (fixo)
-  function adminLogin() {
-    const email = document.getElementById('adminEmail').value.trim();
-    const senha = document.getElementById('adminPassword').value;
-    if (email === "mateusrocha5653@gmail.com" && senha === "mateus@0827") {
-      document.getElementById("adminStatus").innerText = "Login realizado com sucesso!";
-      document.getElementById("adminPanel").style.display = "block";
-      document.getElementById("adminStatus").style.color = "#7fff7f";
-      // Esconde outras seções
-      document.getElementById('attendantLoginSection').style.display = 'none';
-      document.getElementById('home').style.display = 'none';
-      // limpa campos
-      document.getElementById('adminEmail').value = "";
-      document.getElementById('adminPassword').value = "";
-      atualizarListaAtendentes();
-    } else {
-      document.getElementById("adminStatus").innerText = "Email ou senha incorretos.";
-      document.getElementById("adminStatus").style.color = "#ff4c4c";
-      document.getElementById("adminPanel").style.display = "none";
-    }
+  // Salvar atendentes no localStorage
+  function salvarAtendentes(lista) {
+    localStorage.setItem("atendentes", JSON.stringify(lista));
   }
 
-  // Salvar carteira destino
-  function salvarCarteira() {
-    const carteira = document.getElementById("carteiraDestino").value.trim();
-    if (carteira.startsWith("0x") && carteira.length === 42) {
-      alert("Carteira salva com sucesso: " + carteira);
-    } else {
-      alert("Carteira inválida!");
-    }
-  }
-
-  // Listar token (simples)
-  function listarToken() {
-    const contrato = document.getElementById("tokenContrato").value.trim();
-    if (contrato.startsWith("0x") && contrato.length === 42) {
-      document.getElementById("tokenInfo").innerText = "Token listado com sucesso! Contrato: " + contrato;
-    } else {
-      document.getElementById("tokenInfo").innerText = "Contrato inválido.";
-    }
-  }
-
-  // Adicionar atendente (armazenado no array)
-  function addAttendant() {
-    const nome = document.getElementById("attendantName").value.trim();
-    const email = document.getElementById("attendantEmail").value.trim();
-    const senha = document.getElementById("attendantPassword").value.trim();
-    if (!nome || !email || !senha) {
-      document.getElementById("attendantStatus").innerText = "Preencha todos os campos.";
-      return;
-    }
-    if (attendants.find(a => a.email === email)) {
-      document.getElementById("attendantStatus").innerText = "Email já cadastrado.";
-      return;
-    }
-    attendants.push({ nome, email, senha });
-    document.getElementById("attendantStatus").innerText = "Atendente adicionado: " + nome;
-    document.getElementById("attendantName").value = "";
-    document.getElementById("attendantEmail").value = "";
-    document.getElementById("attendantPassword").value = "";
-    atualizarListaAtendentes();
-  }
-
-  // Atualiza lista atendentes no painel admin
+  // Atualizar lista na tela
   function atualizarListaAtendentes() {
-    const ul = document.getElementById("attendantsList");
+    const lista = carregarAtendentes();
+    const ul = document.getElementById("listaAtendentes");
     ul.innerHTML = "";
-    attendants.forEach((a, i) => {
+    if(lista.length === 0) {
+      ul.innerHTML = "<li>Nenhum atendente cadastrado</li>";
+      return;
+    }
+    lista.forEach((at, i) => {
       const li = document.createElement("li");
-      li.textContent = a.nome + " (" + a.email + ")";
+      li.textContent = at.email;
       ul.appendChild(li);
     });
   }
 
-  // Login atendente
-  function attendantLogin() {
-    const email = document.getElementById("attendantLoginEmail").value.trim();
-    const senha = document.getElementById("attendantLoginPassword").value.trim();
-    const atendente = attendants.find(a => a.email === email && a.senha === senha);
-    if (atendente) {
-      document.getElementById("loginStatus").innerText = "Login atendente realizado!";
-      document.getElementById("loginStatus").style.color = "#7fff7f";
-      // Mostrar painel atendente e esconder outros
-      document.getElementById("attendantPanel").style.display = "block";
-      document.getElementById("attendantLoginSection").style.display = "none";
-      document.getElementById("home").style.display = "none";
-      document.getElementById("adminPanel").style.display = "none";
+  // Função de login
+  function login(email, senha) {
+    const admin = admins.find(a => a.email === email && a.senha === senha);
+    if (admin) return "admin";
+
+    const atendentes = carregarAtendentes();
+    const atendente = atendentes.find(a => a.email === email && a.senha === senha);
+    if (atendente) return "atendente";
+
+    return null;
+  }
+
+  // Mostrar/ocultar áreas
+  function mostrarLogin() {
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("painelAdmin").style.display = "none";
+    document.getElementById("painelAtendente").style.display = "none";
+  }
+
+  function mostrarPainelAdmin() {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("painelAdmin").style.display = "block";
+    document.getElementById("painelAtendente").style.display = "none";
+    atualizarListaAtendentes();
+  }
+
+  function mostrarPainelAtendente() {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("painelAdmin").style.display = "none";
+    document.getElementById("painelAtendente").style.display = "block";
+  }
+
+  // Evento login
+  document.getElementById("botaoLogin").addEventListener("click", () => {
+    const email = document.getElementById("inputEmail").value.trim();
+    const senha = document.getElementById("inputSenha").value.trim();
+
+    const tipo = login(email, senha);
+    if(tipo === "admin") {
+      mostrarPainelAdmin();
+      alert("Login de administrador realizado com sucesso!");
+    } else if(tipo === "atendente") {
+      mostrarPainelAtendente();
+      alert("Login de atendente realizado com sucesso!");
       carregarChat();
-      // Limpar inputs
-      document.getElementById("attendantLoginEmail").value = "";
-      document.getElementById("attendantLoginPassword").value = "";
     } else {
-      document.getElementById("loginStatus").innerText = "Email ou senha inválidos.";
-      document.getElementById("loginStatus").style.color = "#ff4c4c";
+      alert("Email ou senha incorretos.");
     }
-  }
+  });
 
-  // Carregar chat na tela do atendente
+  // Adicionar atendente
+  document.getElementById("btnAddAtendente").addEventListener("click", () => {
+    const email = document.getElementById("novoEmail").value.trim();
+    const senha = document.getElementById("novaSenha").value.trim();
+
+    if(!email || !senha) {
+      alert("Preencha email e senha do atendente.");
+      return;
+    }
+
+    const lista = carregarAtendentes();
+    if(lista.find(a => a.email === email)) {
+      alert("Atendente já cadastrado.");
+      return;
+    }
+
+    lista.push({email, senha});
+    salvarAtendentes(lista);
+    atualizarListaAtendentes();
+
+    document.getElementById("novoEmail").value = "";
+    document.getElementById("novaSenha").value = "";
+
+    alert("Atendente adicionado com sucesso!");
+  });
+
+  // Logout Admin
+  document.getElementById("btnLogoutAdmin").addEventListener("click", () => {
+    mostrarLogin();
+    alert("Logout realizado.");
+  });
+
+  // Logout Atendente
+  document.getElementById("btnLogoutAtendente").addEventListener("click", () => {
+    mostrarLogin();
+    alert("Logout realizado.");
+  });
+
+  // Chat simples Atendente <-> Usuário (simulado)
+  // Aqui vamos simular só o chat do atendente com o sistema,
+  // as mensagens ficam salvas no localStorage para persistir na sessão.
+
   function carregarChat() {
-    const chatDiv = document.getElementById("chatBox");
-    chatDiv.innerHTML = "";
-    messages.forEach(msg => {
+    const conversaDiv = document.getElementById("conversa");
+    conversaDiv.innerHTML = "";
+    const mensagens = JSON.parse(localStorage.getItem("chatMensagens") || "[]");
+    mensagens.forEach(m => {
       const div = document.createElement("div");
-      div.className = "message " + (msg.from === "user" ? "userMsg" : "attendantMsg");
-      div.textContent = (msg.from === "user" ? "Usuário: " : "Atendente: ") + msg.text;
-      chatDiv.appendChild(div);
+      div.classList.add("mensagem");
+      div.classList.add(m.de);
+      div.textContent = m.texto;
+      conversaDiv.appendChild(div);
     });
-    chatDiv.scrollTop = chatDiv.scrollHeight;
+    conversaDiv.scrollTop = conversaDiv.scrollHeight;
   }
 
-  // Enviar mensagem usuário
-  function sendUserMessage() {
-    const input = document.getElementById("userMessageInput");
+  document.getElementById("btnEnviarMsg").addEventListener("click", () => {
+    const input = document.getElementById("msgInput");
     const texto = input.value.trim();
-    if (!texto) return;
-    messages.push({ from: "user", text: texto, time: new Date() });
-    input.value = "";
-    atualizarChatUsuario();
-    carregarChat();
-    document.getElementById("chatStatus").innerText = "Mensagem enviada.";
-  }
+    if(!texto) return alert("Digite uma mensagem.");
 
-  // Atualizar chat usuário
-  function atualizarChatUsuario() {
-    const chatDiv = document.getElementById("userChatBox");
-    chatDiv.innerHTML = "";
-    messages.forEach(msg => {
-      const div = document.createElement("div");
-      div.className = "message " + (msg.from === "user" ? "userMsg" : "attendantMsg");
-      div.textContent = (msg.from === "user" ? "Você: " : "Suporte: ") + msg.text;
-      chatDiv.appendChild(div);
-    });
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-  }
+    let mensagens = JSON.parse(localStorage.getItem("chatMensagens") || "[]");
+    mensagens.push({de: "atendente", texto});
+    localStorage.setItem("chatMensagens", JSON.stringify(mensagens));
 
-  // Enviar mensagem atendente
-  function sendAttendantMessage() {
-    const input = document.getElementById("attendantMessageInput");
-    const texto = input.value.trim();
-    if (!texto) return;
-    messages.push({ from: "attendant", text: texto, time: new Date() });
     input.value = "";
     carregarChat();
-    atualizarChatUsuario();
-  }
+  });
+
+  // Inicializa página mostrando o login
+  mostrarLogin();
 
 </script>
 
